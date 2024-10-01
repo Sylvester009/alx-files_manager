@@ -18,7 +18,7 @@ class UsersController {
         .collection("users")
         .findOne({ email });
       if (userExist) {
-        return res.status(400).json({ error: 'Already exist' });
+        return response.status(400).json({ error: 'Already exist' });
       }
 
       const hashPassword = sha1(password);
