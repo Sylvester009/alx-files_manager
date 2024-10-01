@@ -14,10 +14,10 @@ class UsersController {
     }
 
     try {
-      const existingUser = await dbClient.db
+      const userExist = await dbClient.db
         .collection("users")
         .findOne({ email });
-      if (existingUser) {
+      if (userExist) {
         return res.status(400).json({ error: 'Already exist' });
       }
 
