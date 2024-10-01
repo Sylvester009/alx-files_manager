@@ -11,11 +11,11 @@ class AppController {
 
   static async getStats(request, response) {
     try {
-      totalUsers = await dbClient.nbUsers();
-      totalFiles = await dbClient.nbFiles();
+      const totalUsers = await dbClient.nbUsers();
+      const totalFiles = await dbClient.nbFiles();
 
       response.status(200).json({ users: totalUsers, files: totalFiles });
-    } catch {
+    } catch (error) {
       response.status(500).json({ error: 'files can\'t be accessed' });
     }
   }
