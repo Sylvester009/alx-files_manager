@@ -1,5 +1,9 @@
 const redis = require('redis');
 
+/**
+ * RedisClient class for interacting with a Redis server.
+ */
+
 class RedisClient {
   constructor() {
     this.client = redis.createClient();
@@ -51,4 +55,5 @@ class RedisClient {
 }
 
 const redisClient = new RedisClient();
+
 module.exports = redisClient;
