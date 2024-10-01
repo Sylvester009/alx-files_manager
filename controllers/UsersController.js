@@ -3,7 +3,7 @@ const dbClient = require('../utils/db');
 
 class UsersController {
   static async postNew(request, response) {
-    const { email, password } = req.body;
+    const { email, password } = request.body;
 
     if (!email) {
       return response.status(400).json({ error: 'Missing email' });
@@ -14,7 +14,9 @@ class UsersController {
     }
 
     try {
-      const existingUser = await dbClient.db.collection('users').findOne({ email });
+      const existingUser = await dbClient.db
+        .collection("users")
+        .findOne({ email });
       if (existingUser) {
         return res.status(400).json({ error: 'Already exist' });
       }
