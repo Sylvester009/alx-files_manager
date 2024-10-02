@@ -15,10 +15,10 @@ class UsersController {
 
     try {
       const userExist = await dbClient.db
-        .collection("users")
+        .collection('users')
         .findOne({ email });
       if (userExist) {
-        return res.status(400).json({ error: 'Already exist' });
+        return response.status(400).json({ error: 'Already exist' });
       }
 
       const hashPassword = sha1(password);
@@ -28,15 +28,36 @@ class UsersController {
         password: hashPassword,
       };
 
-      const result = await dbClient.db.collection('users').insertOne(newUser);
+      const answer = await dbClient.db.collection('users').insertOne(newUser);
 
       return response.status(201).json({
-        id: result.insertedId,
+        id: answer.insertedId,
         email: newUser.email,
       });
     } catch (error) {
       return response.status(500).json({ error });
     }
+  }
+
+  static async getMe(request, response) {
+    const token = request.headers['x-token'];
+    if (!token) {
+      return response.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const userId = await redisClient.get(`auth_${token}`);
+    if (!userId) {
+      return response.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const user = await dbClient.db
+      .collection('users')
+      .findOne({ _id: dbClient.ObjectId(userId) });
+    if (!user) {
+      return response.status(401).json({ error: 'Unauthorized' });
+    }
+
+    return response.status(200).json({ id: user._id, email: user.email });
   }
 }
 
